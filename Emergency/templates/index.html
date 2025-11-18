@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Gas & Fire Detection Drone</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <style>
+        :root {
+            --primary: #e63946;
+            --secondary: #4f0a88ff;
+            --dark: #1d3557;
+            --light: #f1faee;
+            --accent: #a8dadc;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Header */
+        .animated-header {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 150px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .animated-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .floating-drone {
+            position: absolute;
+            font-size: 300px;
+            opacity: 0.7;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-drone-1 {
+            top: 10%;
+            right: 5%;
+        }
+        
+        .floating-drone-2 {
+            bottom: 10%;
+            left: 5%;
+            animation-delay: 2s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: rgba(29, 53, 87, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--light) !important;
+        }
+        
+        .navbar-nav .nav-link {
+            color: var(--light) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: var(--accent) !important;
+        }
+        
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Section Styling */
+        section {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 50px;
+            position: relative;
+            color: var(--dark);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 5px;
+            background: var(--primary);
+            bottom: -15px;
+            left: 0;
+            border-radius: 10px;
+        }
+        
+        .section-title.center::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Animated Cards */
+        .animated-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.5s ease;
+            height: 100%;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .animated-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.7s ease;
+        }
+        
+        .animated-card:hover::before {
+            left: 100%;
+        }
+        
+        .animated-card:hover {
+            transform: translateY(-15px) rotate(1deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .card-header-custom {
+            background: var(--dark);
+            color: white;
+            padding: 20px;
+            border-bottom: none;
+        }
+        
+        .card-body-custom {
+            padding: 30px;
+        }
+        
+        /* Tech Components */
+        .tech-item {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.5s ease;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tech-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+        
+        .tech-item:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .tech-item:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .tech-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            transition: transform 0.5s ease;
+        }
+        
+        .tech-item:hover .tech-icon {
+            transform: rotate(15deg) scale(1.2);
+        }
+        
+        /* Objectives */
+        .objective-item {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .objective-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.5s ease;
+        }
+        
+        .objective-item:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .objective-item:hover {
+            transform: translateX(15px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        /* Motivation */
+        .stat-box {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 0;
+        }
+        
+        .stat-box:hover::before {
+            opacity: 1;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-15px) scale(1.05);
+            color: white;
+        }
+        
+        .stat-box > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            transition: color 0.5s ease;
+        }
+        
+        .stat-box:hover .stat-number {
+            color: white;
+        }
+        
+        /* Expected Outcomes */
+        .outcome-item {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.5s ease;
+            border-top: 5px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .outcome-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 50px 50px 0;
+            border-color: transparent var(--secondary) transparent transparent;
+            transition: all 0.5s ease;
+        }
+        
+        .outcome-item:hover::after {
+            border-width: 0 70px 70px 0;
+        }
+        
+        .outcome-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        /* System Benefits Sidebar */
+        .benefits-sidebar {
+            position: sticky;
+            top: 120px;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.5s ease;
+        }
+        
+        .benefits-sidebar:hover {
+            transform: translateX(10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .benefit-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent);
+            background: #f8f9fa;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-item:hover {
+            background: var(--accent);
+            transform: translateX(5px);
+        }
+        
+        /* PDF Viewer */
+        .pdf-viewer-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.5s ease;
+            height: 100%;
+        }
+        
+        .pdf-viewer-container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .pdf-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .pdf-canvas-container {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            overflow: auto;
+            max-height: 600px;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        
+        #pdf-canvas {
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Video Player */
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.5s ease;
+        }
+        
+        .video-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-links a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .animated-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+            
+            .floating-drone {
+                font-size: 150px;
+            }
+            
+            .pdf-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg glass-nav fixed-top">
+    <div class="container">
+        <a class="navbar-brand brand-glow" href="#">
+            <i class="fas fa-drone me-2"></i>SafetyDrone
+        </a>
+
+        <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto nav-links">
+                <li class="nav-item"><a class="nav-link" href="#home"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about"><i class="fas fa-info-circle me-1"></i>About</a></li>
+                <li class="nav-item"><a class="nav-link" href="#project"><i class="fas fa-project-diagram me-1"></i>Project</a></li>
+                <li class="nav-item"><a class="nav-link" href="#technical"><i class="fas fa-cogs me-1"></i>Technical</a></li>
+                <li class="nav-item"><a class="nav-link" href="#objectives"><i class="fas fa-bullseye me-1"></i>Objectives</a></li>
+                <li class="nav-item"><a class="nav-link" href="#motivation"><i class="fas fa-lightbulb me-1"></i>Motivation</a></li>
+                <li class="nav-item"><a class="nav-link" href="#outcomes"><i class="fas fa-star me-1"></i>Outcomes</a></li>
+                <li class="nav-item"><a class="nav-link" href="#resources"><i class="fas fa-folder-open me-1"></i>Resources</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+    <!-- Animated Header Section -->
+    <section id="home" class="animated-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 fade-in">
+                    <h1 class="display-4 fw-bold pulse">Emergency Gas & Fire Detection Drone</h1>
+                    <p class="lead my-4">An intelligent safety drone for industrial hazard detection and early warning systems. Developed by Ehasan Tanvir at Daffodil International University.</p>
+                    <div class="mt-4">
+                        <a href="#project" class="btn btn-primary btn-lg me-3">View Project</a>
+                        <a href="#about" class="btn btn-outline-light btn-lg">About Developer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <i class="fas fa-drone floating-drone floating-drone-1"></i>
+        <i class="fas fa-drone floating-drone floating-drone-2"></i>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="bg-light">
+        <div class="container">
+            <h2 class="section-title">About</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="animated-card">
+                        <div class="card-body-custom text-center">
+                            <img src="https://raw.githubusercontent.com/EhsanTanvir/Emergency-Gas-Fire-Detection-Drone/767165f75daf6e86e5776ed4c9dfc2516e9ca80e/profile.jpg" 
+    alt="Profile Picture" 
+    style="
+        width: 200px; 
+        height: 200px; 
+        border-radius: 50%; 
+        object-fit: cover; 
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    ">
+                            <h3>Ehasan Tanvir</h3>
+                            <p class="lead">A passionate student researcher at Daffodil International University</p>
+                            <p>Focused on embedded systems, safety engineering, and drone technology. This project represents a hands-on effort to build a cost-effective, intelligent safety drone aimed at solving real-world problems in industrial fire and gas hazard detection.</p>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <p><i class="fas fa-envelope me-2"></i> Ehsantanvir23@gmail.com</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><i class="fas fa-phone me-2"></i> 01990480724</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Overview -->
+    <section id="project">
+        <div class="container">
+            <h2 class="section-title">Project Overview</h2>
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="animated-card">
+                        <div class="card-header-custom">
+                            <h4><i class="fas fa-exclamation-triangle me-2"></i>Problem Statement</h4>
+                        </div>
+                        <div class="card-body-custom">
+                            <p>Industrial accidents due to gas leaks, fire, and air pollution are rising in Bangladesh. Traditional safety inspection methods are time-consuming, risky, and reactive.</p>
+                            <ul>
+                                <li>Increasing industrial accidents in Bangladesh</li>
+                                <li>Time-consuming traditional inspection methods</li>
+                                <li>Risky working conditions for inspectors</li>
+                                <li>Reactive rather than proactive safety measures</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="animated-card">
+                        <div class="card-header-custom">
+                            <h4><i class="fas fa-lightbulb me-2"></i>Our Solution</h4>
+                        </div>
+                        <div class="card-body-custom">
+                            <p>We built a quadcopter drone equipped with gas sensors, flame sensors, and dust detectors that can fly into hazardous environments, detect issues early, and alert authorities via mobile communication.</p>
+                            <ul>
+                                <li>Quadcopter drone with multiple sensors</li>
+                                <li>Early detection of hazards</li>
+                                <li>Mobile communication for alerts</li>
+                                <li>Access to hazardous environments</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Overview -->
+    <section id="technical" class="bg-light">
+        <div class="container">
+            <h2 class="section-title">Technical Overview</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-wave-square"></i>
+                        </div>
+                        <h5>MQ-135 Gas Sensor</h5>
+                        <p>Air quality detection for hazardous gases</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-wind"></i>
+                        </div>
+                        <h5>Optical Dust Sensor</h5>
+                        <p>Detection of airborne particles and pollutants</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h5>Five-way Flame Sensor</h5>
+                        <p>Multi-directional fire detection capability</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-3 mb-4">
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <h6>Arduino Mega 2560</h6>
+                        <p>Main processing unit</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h6>KK 2.1.5 Flight Controller</h6>
+                        <p>Stabilization and control</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-satellite-dish"></i>
+                        </div>
+                        <h6>GSM Module 900A</h6>
+                        <p>Communication system</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="tech-item">
+                        <div class="tech-icon">
+                            <i class="fas fa-battery-full"></i>
+                        </div>
+                        <h6>Rechargeable Battery</h6>
+                        <p>Power supply system</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Objectives -->
+    <section id="objectives">
+        <div class="container">
+            <h2 class="section-title">Objectives</h2>
+            <div class="row">
+                <div class="col-lg-8">
+                    <p>Our drone-based system is engineered to identify fire outbreaks and gas leakage spots in real-time, providing a rapid response advantage in critical situations. It is equipped to monitor optical dust particles in industrial environments, ensuring better visibility into air quality and safety risks.</p>
+                    
+                    <div class="objective-item">
+                        <h5><i class="fas fa-fire me-2"></i>Identify fire and gas leakage spots in real time</h5>
+                        <p>Real-time detection and localization of hazards for immediate response.</p>
+                    </div>
+                    
+                    <div class="objective-item">
+                        <h5><i class="fas fa-bell me-2"></i>Send immediate alerts to operator and fire station</h5>
+                        <p>Automated notification system for rapid emergency response.</p>
+                    </div>
+                    
+                    <div class="objective-item">
+                        <h5><i class="fas fa-eye me-2"></i>Monitor optical dust particles</h5>
+                        <p>Continuous air quality monitoring in industrial environments.</p>
+                    </div>
+                    
+                    <div class="objective-item">
+                        <h5><i class="fas fa-industry me-2"></i>Assist in industrial inspections in high-risk areas</h5>
+                        <p>Reducing human risk in dangerous inspection scenarios.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="benefits-sidebar">
+                        <h4 class="mb-4">System Benefits</h4>
+                        <div class="benefit-item">
+                            <h6>Rapid Response</h6>
+                            <p class="mb-0">Quick detection and alert system</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h6>Early Hazard Detection</h6>
+                            <p class="mb-0">Identify issues before they escalate</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h6>Reduced Human Risk</h6>
+                            <p class="mb-0">Minimize exposure to dangerous environments</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h6>Cost-Effective</h6>
+                            <p class="mb-0">Affordable solution for developing countries</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h6>Real-time Monitoring</h6>
+                            <p class="mb-0">Continuous surveillance of industrial areas</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h6>Automated Alerts</h6>
+                            <p class="mb-0">Immediate notification to authorities</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Motivation -->
+    <section id="motivation" class="bg-light">
+        <div class="container">
+            <h2 class="section-title center text-center">Motivation</h2>
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="stat-box">
+                        <div class="stat-number">↑</div>
+                        <h5>Increasing Fire Incidents</h5>
+                        <p>Fire incidents in Bangladesh are increasing each year</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-box">
+                        <div class="stat-number">20%</div>
+                        <h5>Gas Leak Causes</h5>
+                        <p>Over 20% of fires are caused by gas leaks</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-box">
+                        <div class="stat-number">⏱️</div>
+                        <h5>Delayed Detection</h5>
+                        <p>Traditional fire detection systems are delayed or inaccessible</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-box">
+                        <div class="stat-number">🚀</div>
+                        <h5>Technological Solution</h5>
+                        <p>Drone technology offers faster, safer alternatives</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Expected Outcomes -->
+    <section id="outcomes">
+        <div class="container">
+            <h2 class="section-title">Expected Outcomes</h2>
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="outcome-item">
+                        <h4><i class="fas fa-check-circle me-2 text-success"></i>Functional Detection System</h4>
+                        <p>Fully operational quadcopter with integrated gas, fire, and dust detection capabilities along with an automated alert system.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="outcome-item">
+                        <h4><i class="fas fa-shield-alt me-2 text-primary"></i>Reduced Human Risk</h4>
+                        <p>Minimized exposure of personnel to hazardous environments during industrial inspections and emergency situations.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="outcome-item">
+                        <h4><i class="fas fa-chart-line me-2 text-info"></i>Improved Safety Awareness</h4>
+                        <p>Enhanced safety protocols and awareness in industrial workplaces through continuous monitoring and early detection.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="outcome-item">
+                        <h4><i class="fas fa-dollar-sign me-2 text-warning"></i>Cost-Effective Solution</h4>
+                        <p>Affordable safety technology suitable for implementation in developing countries with limited resources.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Resources -->
+    <section id="resources" class="bg-light">
+        <div class="container">
+            <h2 class="section-title center text-center">Project Resources</h2>
+            <div class="row">
+                <div class="col-lg-6 mb-5">
+                    <div class="pdf-viewer-container">
+                        <h3 class="mb-4"><i class="fas fa-file-pdf me-2 text-danger"></i>Project Paper</h3>
+                        <p>Complete documentation of the project including methodology, implementation details, and results.</p>
+                        
+                        <div class="pdf-controls">
+                            <button id="prev-page" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left"></i> Previous
+                            </button>
+                            <span id="page-info">Page: <span id="page-num">1</span> / <span id="page-count">-</span></span>
+                            <button id="next-page" class="btn btn-outline-primary">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="pdf-canvas-container">
+                            <canvas id="pdf-canvas"></canvas>
+                        </div>
+                        
+                        <div class="mt-3 text-center">
+                            <a href="#" class="btn btn-primary" id="download-pdf">
+                                <i class="fas fa-download me-2"></i>Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-5">
+                    <div class="pdf-viewer-container">
+                        <h3 class="mb-4"><i class="fas fa-video me-2 text-primary"></i>Project Demo</h3>
+                        <p>Video demonstration showcasing the drone's capabilities in detecting and responding to hazards.</p>
+                        
+                        <div class="video-container mt-4">
+                            <iframe src="https://www.youtube.com/embed/NpmXig_7Bvg?si=G09RXsd26ovdc50B" title="Project Demo Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        
+                        <div class="mt-3 text-center">
+                            <a href="#" class="btn btn-primary">
+                                <i class="fab fa-youtube me-2"></i>Watch on YouTube
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h4>Emergency Gas & Fire Detection Drone</h4>
+                    <p>An innovative solution for industrial safety using drone technology.</p>
+                    <div class="social-icons mt-4">
+                        <a href="https://www.facebook.com/arafin.tanjiro"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://ehsantanvir.github.io/"><i class="fab fa-Website"></i></a>
+                        <a href="http://www.linkedin.com/in/ehsantanvir0723"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/EhsanTanvir/"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5>Quick Links</h5>
+                    <div class="footer-links">
+                        <p><a href="#home">Home</a></p>
+                        <p><a href="#about">About Developer</a></p>
+                        <p><a href="#project">Project Overview</a></p>
+                        <p><a href="#technical">Technical Details</a></p>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5>Contact Information</h5>
+                    <p><i class="fas fa-user me-2"></i> Ehasan Tanvir</p>
+                    <p><i class="fas fa-envelope me-2"></i> Ehsantanvir23@gmail.com</p>
+                    <p><i class="fas fa-phone me-2"></i> 01990480724</p>
+                    <p><i class="fas fa-university me-2"></i> Daffodil International University</p>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4" style="border-color: rgba(255,255,255,0.1);">
+            <div class="text-center">
+                <p>&copy; 2024 Emergency Gas and Fire Detection Drone Project. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Navbar background on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(29, 53, 87, 0.98)';
+                navbar.style.padding = '10px 0';
+            } else {
+                navbar.style.background = 'rgba(29, 53, 87, 0.95)';
+                navbar.style.padding = '15px 0';
+            }
+        });
+        
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe elements for animation
+        document.querySelectorAll('.fade-in, .tech-item, .animated-card, .objective-item, .stat-box, .outcome-item, .pdf-viewer-container, .benefits-sidebar').forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // PDF Viewer Functionality
+        const url = 'https://raw.githubusercontent.com/EhsanTanvir/Emergency-Gas-Fire-Detection-Drone/99efc8508323e21e06fbc4af10a6c399f16012cf/171-15-9211-compressed.pdf';
+        
+        let pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            canvas = document.getElementById('pdf-canvas'),
+            ctx = canvas.getContext('2d');
+        
+        // Scale factor for rendering the PDF
+        const scale = 1.5;
+        
+        // Load PDF document
+        pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            document.getElementById('page-count').textContent = pdfDoc.numPages;
+            
+            // Initial page rendering
+            renderPage(pageNum);
+        });
+        
+        // Render the specified page
+        function renderPage(num) {
+            pageRendering = true;
+            
+            pdfDoc.getPage(num).then(function(page) {
+                const viewport = page.getViewport({ scale: scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                
+                const renderTask = page.render(renderContext);
+                
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+            
+            document.getElementById('page-num').textContent = num;
+        }
+        
+        // Queue rendering of the next page if currently rendering
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+        
+        // Previous page button
+        document.getElementById('prev-page').addEventListener('click', function() {
+            if (pageNum <= 1) {
+                return;
+            }
+            pageNum--;
+            queueRenderPage(pageNum);
+        });
+        
+        // Next page button
+        document.getElementById('next-page').addEventListener('click', function() {
+            if (pageNum >= pdfDoc.numPages) {
+                return;
+            }
+            pageNum++;
+            queueRenderPage(pageNum);
+        });
+    </script>
+</body>
+</html>
